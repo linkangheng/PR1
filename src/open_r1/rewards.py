@@ -6,6 +6,7 @@ import numpy as np
 import warnings
 from datetime import datetime
 from open_r1.utils import extract_bbox_answer, compute_iou, parse_json, HungarianMatcher, calculate_reward, get_cate_to_id, extract_boxes, pr1_counting_format_reward, num_scale
+import nltk
 
 def log(content, sol, other_info, reward, tag=None):
     log_dir = os.getenv("LOG_DIR", None)
@@ -217,3 +218,30 @@ def pr1_counting_reward(completions, solution, **kwargs):
     return rewards
 
 # OCR Reward
+def pr1_ocr_reward(completions, solution, **kwargs):
+    def cal_per_metrics(pred, gt):
+        metrics = {}
+        metrics["edit_dist"] = nltk.edit_distance(pred, gt) / max(len(pred), len(gt))
+        return metrics
+    rewards = []
+    if 'content' in completions[0][0]:
+        contents = [completion[0]["content"].replace("<|endoftext|>", "").replace("<|im_end|>", "") for completion in completions]
+    else:
+        contents = [completion.replace("<|endoftext|>", "").replace("<|im_end|>", "") for completion in completions]
+    for completion, sol in zip(contents, solution):
+        try:
+            # Calculate edit distance
+            edit_dist = cal_per_metrics(completion, sol)['edit_dist']
+            max_len = max(len(completion), len(sol))
+            if max_len == 0:
+                reward = 0.0
+            else:
+                # Normalize by max length and convert to reward between 0 and 1
+                normalized_dist = 1 - edit_dist
+                reward = max(0.0, normalized_dist)
+        except Exception as e:
+            print(f"Error in pr1_ocr_reward: {e}")
+            print(f"Error in pr1_ocr_reward: {completion} {sol}")
+            reward = 0.0
+        rewards.append(reward)
+    return rewards
