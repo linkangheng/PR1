@@ -78,7 +78,7 @@ def pr1_detection_reward(completions, solution, return_reward_dict=False, **kwar
                 continue
             
             pred_logits = torch.zeros(len(pred_id), 90)
-            pred_logits[range(len(pred_id)), pred_id.long()] = 1.0
+            pred_logits[range(len(pred_id)), pred_id.long() - 1] = 1.0
             
             outputs = {
                 "pred_logits": pred_logits.unsqueeze(0),
