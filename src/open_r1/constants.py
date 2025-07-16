@@ -6,6 +6,7 @@ reward_funcs_registry = {
     "pr1_grounding_format": pr1_grounding_format_reward,
     "pr1_detection": pr1_detection_reward,
     "pr1_counting": pr1_counting_reward,
+    "pr1_ocr": pr1_ocr_reward,
 }
 
 # SYSTEM PROMPTS
@@ -38,7 +39,7 @@ question_template_registry = {
     "pr1_grounding": "Output the bounding box of the {question} in the image.",
     "pr1_counting": "Output all the bounding boxes of the {question}",
     "pr1_detection": "Please output bbox coordinates and names of person, bicycle, car, motorcycle, airplane, bus, train, truck, boat, traffic light, fire hydrant, stop sign, parking meter, bench, bird, cat, dog, horse, sheep, cow, elephant, bear, zebra, giraffe, backpack, umbrella, handbag, tie, suitcase, frisbee, skis, snowboard, sports ball, kite, baseball bat, baseball glove, skateboard, surfboard, tennis racket, bottle, wine glass, cup, fork, knife, spoon, bowl, banana, apple, sandwich, orange, broccoli, carrot, hot dog, pizza, donut, cake, chair, couch, potted plant, bed, dining table, toilet, tv, laptop, mouse, remote, keyboard, cell phone, microwave, oven, toaster, sink, refrigerator, book, clock, vase, scissors, teddy bear, hair drier, toothbrush.",
-    "pr1_ocr": "<yinjisheng>",
+    "pr1_ocr": "{question}",
 }
  
 answer_template_registry = {
@@ -47,5 +48,5 @@ answer_template_registry = {
     "pr1_grounding": "{answer}",
     "pr1_counting": "{answer}",
     "pr1_detection": "{answer}",
-    "pr1_ocr": "<yinjisheng>",
+    "pr1_ocr": "{answer}",
 }
